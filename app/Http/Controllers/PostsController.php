@@ -144,11 +144,6 @@ class PostsController extends Controller
             'body' => 'required'
         ]);
 
-        //Check for correct user
-        if(auth()->user()->id != $post->user_id) {
-            return redirect('/posts')->with('error', 'Unauthorized Page');
-        }
-
         // Handle File Upload
         if($request->hasFile('cover_image')){
             //Get filename with the extension
@@ -189,11 +184,6 @@ class PostsController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
-
-        //Check for correct user
-        if(auth()->user()->id != $post->user_id) {
-            return redirect('/posts')->with('error', 'Unauthorized Page');
-        }
 
         if($post->cover_image != 'noimage.jpg') {
             //Delete the image
