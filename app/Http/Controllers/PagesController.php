@@ -23,4 +23,12 @@ class PagesController extends Controller
 
         return view('pages.services')->with($data);
     }
+
+    public function bootstrap() {
+        $data = array (
+            'title' => 'Bootstrap'
+        );
+
+        return view('pages.test')->with($data);
+    }
 }

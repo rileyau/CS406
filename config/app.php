@@ -180,6 +180,9 @@ return [
         //LaravelCollective HTML&Forms
         Collective\Html\HtmlServiceProvider::class,
 
+        //Laravel CKeditor
+        Unisharp\Ckeditor\ServiceProvider::class,
+
     ],
 
     /*
