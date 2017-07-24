@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class='container'>
     <h1>{{$post->title}}</h1>
     <small>Posted at {{$post->created_at}} by {{$post->user->name}}</small>
     <hr>    
@@ -17,5 +18,5 @@
             {!!Form::close()!!}
         @endif
     @endif
-    
+</div>
 @endsection

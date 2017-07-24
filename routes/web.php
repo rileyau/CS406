@@ -12,12 +12,28 @@
 */
 
 Route::get('/', 'PagesController@index');
+
+//Pages
 Route::get('/about', 'PagesController@about');
 Route::get('/services', 'PagesController@services');
-Route::get('/bootstrap', 'PagesController@bootstrap');
 
+//Dashboard
+Route::get('/dashboard', 'DashboardController@index');
+
+//Posts
 Route::resource('posts', 'PostsController');
 
+//Boards
+Route::get('/b/{name}', 'BoardsController@show');
+Route::get('/board/create', 'BoardsController@create');
+Route::post('/board', 'BoardsController@store');
+
+//Board Posts
+Route::post('/b/{name}/posts', 'PostsController@store');
+Route::get('/b/{name}/posts/create', 'PostsController@create');
+Route::get('/b/{name}/posts/{post}', 'PostsController@show');
+
+//Auth
 Auth::routes();
 
-Route::get('/dashboard', 'DashboardController@index');
+

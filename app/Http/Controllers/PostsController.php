@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Post;
+use App\Board;
 
 class PostsController extends Controller
 {
@@ -39,10 +40,15 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($name)
     {
+        $board = Board::find($name);
+        $data = array(
+            'board' => $board,
+            'title' => 'New Post'
+        );
 
-        return view('posts.create')->with('title', "New Post");
+        return view('posts.create')->with($data);
     }
 
     /**
@@ -55,41 +61,19 @@ class PostsController extends Controller
     {
         $this->validate($request, [
             'title' => 'required',
-            'body' => 'required',
-            'cover_image' => 'image|nullable|max:1999'
+            'body' => 'required'
         ]);
-
-        // Handle File Upload
-        if($request->hasFile('cover_image')){
-            //Get filename with the extension
-            $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
-
-            //Get just filename
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-
-            //Get just ext
-            $extension = $request->file('cover_image')->getClientOriginalExtension();
-
-            //Filename to store
-            $filenameToStore = $filename.'_'.time().'.'.$extension;
-
-            //Upload image
-            $path = $request->file('cover_image')->storeAs('public/cover_images', $filenameToStore);
-        }
-        else {
-            $filenameToStore = 'noimage.jpg';
-        }
-        
-
+       
+        $board = $request->input('board');
         //Add post to DB
         $post = new Post;
         $post->title = $request->input('title');
         $post->body = $request->input('body');
+        $post->board = $board;
         $post->user_id = auth()->user()->id;
-        $post->cover_image = $filenameToStore;
         $post->save();
 
-        return redirect('/posts')->with('success', 'Post created');
+        return redirect('/b/'.$board)->with('success', 'Post created');
     }
 
     /**
