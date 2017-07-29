@@ -20,18 +20,24 @@ Route::get('/services', 'PagesController@services');
 //Dashboard
 Route::get('/dashboard', 'DashboardController@index');
 
-//Posts
-Route::resource('posts', 'PostsController');
-
 //Boards
 Route::get('/b/{name}', 'BoardsController@show');
 Route::get('/board/create', 'BoardsController@create');
 Route::post('/board', 'BoardsController@store');
+Route::get('/b/{name}/edit', 'BoardsController@edit');
+Route::put('/b/{name}', 'BoardsController@update');
 
 //Board Posts
 Route::post('/b/{name}/posts', 'PostsController@store');
 Route::get('/b/{name}/posts/create', 'PostsController@create');
-Route::get('/b/{name}/posts/{post}', 'PostsController@show');
+Route::get('/b/{name}/posts/{id}', 'PostsController@show');
+Route::get('/b/{name}/posts/{id}/edit', 'PostsController@edit');
+Route::put('/b/{name}/posts/{id}', 'PostsController@update');
+Route::delete('/b/{name}/posts/{id}', 'PostsController@destroy');
+
+//Subscriptions
+Route::post('/b/{name}/subscription', 'SubscriptionsController@store');
+Route::delete('/b/{name}/subscription', 'SubscriptionsController@destroy');
 
 //Auth
 Auth::routes();

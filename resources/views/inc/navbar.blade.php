@@ -20,7 +20,20 @@
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
-                <li><a href='/board/create'>Create Board</a></li>
+                @if (!Auth::guest())
+                     @if(count(Auth::user()->subscriptions) > 0)
+                            <li class='dropdown'><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Subscriptions <span class="caret"></span>
+                            </a>                       
+                            <ul class="dropdown-menu scrollable-menu" role="menu">
+                                @foreach(Auth::user()->subscriptions as $board) 
+                                    <li><a href='/b/{{$board->name}}'>{{$board->name}}</a></li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </li>
+                    <li><a href='/board/create'>Create Board</a></li>
+                @endif
             </ul>
 
             <!-- Right Side Of Navbar -->
@@ -32,7 +45,7 @@
                 @else
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ Auth::user()->name }} <span class="caret"></span>
+                            {{ Auth::user()->email }} <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu" role="menu">

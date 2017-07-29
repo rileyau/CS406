@@ -30,4 +30,9 @@ class User extends Authenticatable
     public function posts() {
         return $this->hasMany('App\Post');
     }
+
+    public function subscriptions()
+    {
+        return $this->belongsToMany('App\Board', 'subscriptions', 'user_id', 'board');
+    }
 }

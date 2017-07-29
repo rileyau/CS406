@@ -4,35 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use App\Post;
 use App\Board;
 
 class PostsController extends Controller
 {
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $data = array(
-            'title' => "Posts",
-            'posts' => Post::orderBy('created_at', 'desc')->paginate(3)
-        );
-
-        return view('posts.index')->with($data);
+        $this->middleware('auth', ['except' => ['show']]);
     }
 
     /**
@@ -51,12 +32,6 @@ class PostsController extends Controller
         return view('posts.create')->with($data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -76,105 +51,75 @@ class PostsController extends Controller
         return redirect('/b/'.$board)->with('success', 'Post created');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show($name, $id)
     {
+        $board = Board::find($name);
+        $post = Post::find($id);
+
+        $subbed = false;
+
+        if(!Auth::guest()) {
+            $subbed = $board->userIsSubbed(Auth::user()->id);
+        }
+
          $data = array(
-            'title' => "Posts",
-            'post' => Post::find($id)
+            'title' => $post->title,
+            'post' => $post,
+            'board' => $board,
+            'subbed' =>$subbed
         );
 
         return view('posts.show')->with($data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit($name, $id)
     {
+        $board = Board::find($name);
         $post = Post::find($id);
-        $data = array(
-            'title' => "Posts",
-            'post' => $post
+
+        $subbed = false;
+
+        if(!Auth::guest()) {
+            $subbed = $board->userIsSubbed(Auth::user()->id);
+        }
+
+         $data = array(
+            'title' => $post->title,
+            'post' => $post,
+            'board' => $board,
+            'subbed' =>$subbed
         );
 
         //Check for correct user
         if(auth()->user()->id != $post->user_id) {
-            return redirect('/posts')->with('error', 'Unauthorized Page');
+            return redirect('/b/$board->name/posts/$id')->with('error', 'Unauthorized Page');
         }
 
         return view('posts.edit')->with($data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, $name, $id)
     {
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required'
         ]);
 
-        // Handle File Upload
-        if($request->hasFile('cover_image')){
-            //Get filename with the extension
-            $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
-
-            //Get just filename
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-
-            //Get just ext
-            $extension = $request->file('cover_image')->getClientOriginalExtension();
-
-            //Filename to store
-            $filenameToStore = $filename.'_'.time().'.'.$extension;
-
-            //Upload image
-            $path = $request->file('cover_image')->storeAs('public/cover_images', $filenameToStore);
-        }
-
         //Add updated post to DB
         $post = Post::find($id);
         $post->title = $request->input('title');
         $post->body = $request->input('body');
-        if($request->hasFile('cover_image')){
-            $post->cover_image = $filenameToStore;
-        }
 
         $post->save();
 
-        return redirect('/posts')->with('success', 'Post updated');
+        return redirect('/b/'.$name.'/posts/'.$id)->with('success', 'Post updated');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy($name, $id)
     {
         $post = Post::find($id);
 
-        if($post->cover_image != 'noimage.jpg') {
-            //Delete the image
-            Storage::delete('public/cover_images/'.$post->cover_image);
-        }
-
         $post->delete();
-        return redirect('/posts')->with('success', 'Post removed');
+        return redirect('/b/'.$name)->with('success', 'Post removed');
     }
 }

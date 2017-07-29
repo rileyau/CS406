@@ -4,7 +4,7 @@
 @include('inc.banner')
 <div class='container'>
     <h1>Create Post</h1>
-    {!! Form::open(['action' => array('PostsController@store', $board->name), 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+    {!! Form::open(['action' => array('PostsController@store', $board->name), 'method' => 'POST']) !!}
         <div class="form-group">
             {{Form::label('title', 'Title')}}
             {{Form::text('title', '', ['class' => 'form-control', 'placeholder' => 'Title'])}}

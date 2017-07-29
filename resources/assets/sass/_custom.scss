@@ -1,8 +1,22 @@
+body {
+    background-color: #EFEFEF;
+}
+
 .navbar-inverse {
     border-radius: 0px;
     margin-bottom: 0px;
     background-color: #2A333E;
     color: #829499;
+}
+
+.navbar-default {
+    margin-bottom: 10px;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
 }
 
 #center-nav {
@@ -39,8 +53,17 @@
     text-decoration: none;
 }
 
-.midway {
-    background-color: #2A333E;
-    color: #829499;
-    margin-top: 20px;
+.col-md-8, .col-md-4, .col-sm-7, .col-sm-5 {
+    padding: 0px 5px;
+}
+
+.well-sm {
+    background-color: #FFF;
+    margin-bottom: 7px;
+}
+
+.rating-buttons {
+    height: 50px;
+    width: 30px;
+    margin-right: 15px;
 }
