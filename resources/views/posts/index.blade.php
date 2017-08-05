@@ -1,25 +1,82 @@
 @extends('layouts.app')
 
 @section('content')
-<div class='container'>
-    <h1>Posts</h1>
-    @if(count($posts) > 0)
+@include('inc.home-banner')
+    <div class='container'>
+        @if(count($posts) < 1)
+            <h2>There is nothing to show!</h2>
+            <p>Posts from boards you subscribe to will show up here. </p> 
+        @endif
         @foreach($posts as $post)
-            <div class="well">
-                <div class='row'>
-                    <div class='col-md-2 col-sm-2'>
-                        <img style='width: 100%' src='/storage/cover_images/{{$post->cover_image}}' />
-                    </div>
-                    <div class='col-md-10 col-sm-10'>
-                        <a href='posts/{{$post->id}}'><h3>{{$post->title}}</h3></a>
-                        <small>Written on {{$post->created_at}} by {{$post->user->name}}</small>
-                    </div>
-                </div>                
-            </div>  
-        @endforeach
-        {{$posts->links()}}
-    @else
-        <p>You don't have any posts.</p>
-    @endif
-</div>
+            <div class='well well-sm'>
+            <div class='pull-left rating'>
+                <strong>{{$post->totalRating()}}</strong>
+            </div>
+            @if(!Auth::guest())
+                <div class='pull-left rating-buttons'>
+
+                @if($post->userHasRated(Auth::user()->id) == 1)
+
+                    {!! Form::open(['action' => ['UserPostRatingsController@destroy', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                        {!! Form::hidden('_method', 'DELETE') !!}
+                        <button type="submit" class="btn btn-primary btn-sm" style='margin-bottom: 3px'>
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        </button>
+                    {!! Form::close() !!}
+                    <br>
+                    {!! Form::open(['action' => ['UserPostRatingsController@update', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                        {!! Form::hidden('rating', -1) !!}
+                        {!! Form::hidden('_method', 'PUT') !!}
+                        <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </button>
+                    {!! Form::close() !!}
+
+                @elseif($post->userHasRated(Auth::user()->id) == -1)
+
+                    {!! Form::open(['action' => ['UserPostRatingsController@update', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                        {!! Form::hidden('rating', 1) !!}
+                        {!! Form::hidden('_method', 'PUT') !!}
+                        <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        </button>
+                    {!! Form::close() !!}
+                    <br>
+                    {!! Form::open(['action' => ['UserPostRatingsController@destroy', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                        {!! Form::hidden('_method', 'DELETE') !!}
+                        <button type="submit" class="btn btn-danger btn-sm" style='margin-bottom: 3px'>
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </button>
+                    {!! Form::close() !!}
+
+                @else 
+
+                    {!! Form::open(['action' => ['UserPostRatingsController@rate', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                        {!! Form::hidden('rating', 1) !!}
+                        <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        </button>
+                    {!! Form::close() !!}
+                    <br>
+                    {!! Form::open(['action' => ['UserPostRatingsController@rate', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                        {!! Form::hidden('rating', -1) !!}
+                        <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </button>
+                    {!! Form::close() !!}
+
+                @endif                   
+                
+                </div>
+            @endif
+                <div>
+                    <h4><a href='/b/{{$post->board}}/posts/{{$post->id}}'>{{$post->title}}</a></h4>
+                    <small>Submitted {{$post->created_at}} by {{$post->user->name}} on <a href='/b/{{$post->board}}'>{{$post->board}}</a></small>
+                </div>
+                
+            </div>
+        @endforeach 
+        {{$posts->links()}}  
+    </div>
+    
 @endsection

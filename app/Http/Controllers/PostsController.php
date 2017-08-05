@@ -13,14 +13,19 @@ class PostsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['show']]);
+        $this->middleware('auth', ['except' => ['index', 'show']]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function index() {
+        $posts = Post::paginate(5);
+
+        $data = array (
+            'posts'=> $posts,
+        );
+
+        return view('posts.index')->with($data);
+    }
+
     public function create($name)
     {
         $board = Board::find($name);
@@ -100,6 +105,7 @@ class PostsController extends Controller
 
     public function update(Request $request, $name, $id)
     {
+
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required'

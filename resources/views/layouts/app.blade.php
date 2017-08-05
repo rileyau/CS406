@@ -19,6 +19,7 @@
     
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="jquery-3.2.1.min.js"></script>
     
 </head>
 <body>
@@ -33,6 +34,13 @@
     <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
     <script>
         CKEDITOR.replace( 'article-ckeditor' );
+    </script>
+    <script>
+        $(document).ready(function() {
+        // get current URL path and assign 'active' class
+        var pathname = window.location.pathname;
+        $('.nav > li > a[href="'+pathname+'"]').parent().addClass('active');
+    })
     </script>
 </body>
 </html>

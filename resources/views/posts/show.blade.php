@@ -10,9 +10,9 @@
                     <h3>{{$post->title}}</h3>
                     <small>Posted at {{$post->created_at}} by {{$post->user->name}}</small>
                     <hr>    
-                    <p>
+                    <div class='post-body'>
                         {!!$post->body!!}
-                    </p>
+                    </div>
                     <hr>
                     @if(!Auth::guest())
                         @if(Auth::user()->id == $post->user_id)

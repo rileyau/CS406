@@ -7,10 +7,10 @@
     <nav class="navbar navbar-default">
         <div class="container">            
                 <ul class="nav navbar-nav" id='center-nav'>
-                    <li><a href="./{{$board->name}}">Hot</a></li>
-                    <li><a href='./{{$board->name}}/top'>Top</a></li>
-                    <li><a href="./{{$board->name}}/rising">Rising</a></li>
-                    <li><a href="./{{$board->name}}/new">New</a></li>
+                    <li><a href="/b/{{$board->name}}">Hot</a></li>
+                    <li><a href='/b/{{$board->name}}/top'>Top</a></li>
+                    <li><a href="/b/{{$board->name}}/rising">Rising</a></li>
+                    <li><a href="/b/{{$board->name}}/new">New</a></li>
                 </ul>
             
         </div>

@@ -28,8 +28,12 @@
                 </div>                        
             <hr>
                 {!! $board->description !!}
-            <hr>
-            <a href='/b/{{$board->name}}/edit' class='btn btn-default'>Edit Board</a> <a href='#' class='btn btn-danger'>Lock Board</a>
+            @if(!Auth::guest())
+                @if(Auth::user()->id == $board->created_by)
+                    <hr>
+                    <a href='/b/{{$board->name}}/edit' class='btn btn-default'>Edit Board</a> <a href='#' class='btn btn-danger'>Lock Board</a>
+                @endif
+            @endif
         </div>
     </div>
 </div>

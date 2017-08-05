@@ -11,7 +11,6 @@
 |
 */
 
-Route::get('/', 'PagesController@index');
 
 //Pages
 Route::get('/about', 'PagesController@about');
@@ -27,7 +26,8 @@ Route::post('/board', 'BoardsController@store');
 Route::get('/b/{name}/edit', 'BoardsController@edit');
 Route::put('/b/{name}', 'BoardsController@update');
 
-//Board Posts
+//Posts
+Route::get('/', 'PostsController@index');
 Route::post('/b/{name}/posts', 'PostsController@store');
 Route::get('/b/{name}/posts/create', 'PostsController@create');
 Route::get('/b/{name}/posts/{id}', 'PostsController@show');
@@ -38,6 +38,11 @@ Route::delete('/b/{name}/posts/{id}', 'PostsController@destroy');
 //Subscriptions
 Route::post('/b/{name}/subscription', 'SubscriptionsController@store');
 Route::delete('/b/{name}/subscription', 'SubscriptionsController@destroy');
+
+//UserPostRatings
+Route::post('/posts/{post}/rating', 'UserPostRatingsController@rate');
+Route::put('/posts/{post}/rating', 'UserPostRatingsController@update');
+Route::delete('/posts/{post}/rating', 'UserPostRatingsController@destroy');
 
 //Auth
 Auth::routes();
