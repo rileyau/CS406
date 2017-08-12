@@ -20,11 +20,11 @@ Route::get('/services', 'PagesController@services');
 Route::get('/dashboard', 'DashboardController@index');
 
 //Boards
-Route::get('/b/{name}', 'BoardsController@show');
 Route::get('/board/create', 'BoardsController@create');
 Route::post('/board', 'BoardsController@store');
 Route::get('/b/{name}/edit', 'BoardsController@edit');
 Route::put('/b/{name}', 'BoardsController@update');
+Route::get('/b/{name}/{filter?}', 'BoardsController@show');
 
 //Posts
 Route::get('/', 'PostsController@index');

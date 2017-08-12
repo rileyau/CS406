@@ -16,22 +16,57 @@ class BoardsController extends Controller
         $this->middleware('auth', ['except' => ['show']]);
     }
 
-    public function show($name) {
+    public function show($name, $filter = 'hot') {
         $board = Board::find($name);
-        $posts = Post::where('board', $name)->paginate(5);
+        if($filter != 'top' && $filter != 'hot' && $filter != 'rising' && $filter != 'new') {
+            abort(404);
+        }
+        if($filter == 'new') {
+            $posts = $board->getNewPosts();
 
-        $subbed = false;
+            $subbed = false;
 
-        if(!Auth::guest()) {
-            $subbed = $board->userIsSubbed(Auth::user()->id);
+            if(!Auth::guest()) {
+                $subbed = $board->userIsSubbed(Auth::user()->id);
+            }
+
+            $data = array (
+                'title' => $name,
+                'board'=> $board,
+                'posts'=> $posts,
+                'links' => $posts,
+                'subbed' => $subbed
+            );
         }
 
-        $data = array (
-            'title' => $name,
-            'board'=> $board,
-            'posts'=> $posts,
-            'subbed' => $subbed
-        );
+        if($filter == 'top' || $filter == 'hot' || $filter == 'rising') {
+            if($filter == 'top') {
+                $postsWithRatings = $board->getTopPosts();
+            }
+            else if($filter == 'hot') {
+                $postsWithRatings = $board->getHotPosts();
+            }
+            $posts = array();
+            
+            foreach($postsWithRatings as $item) {
+                $obj = new Post((array)$item);
+                array_push($posts, $obj);
+            }
+
+            $subbed = false;
+
+            if(!Auth::guest()) {
+                $subbed = $board->userIsSubbed(Auth::user()->id);
+            }
+
+            $data = array (
+                'title' => $name,
+                'board'=> $board,
+                'posts'=> $posts,
+                'links' => $postsWithRatings,
+                'subbed' => $subbed
+            );
+        }
 
         return view('boards.index')->with($data);
     }

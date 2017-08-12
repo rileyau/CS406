@@ -71,7 +71,7 @@
             @endif
                 <div>
                     <h4><a href='/b/{{$post->board}}/posts/{{$post->id}}'>{{$post->title}}</a></h4>
-                    <small>Submitted {{$post->created_at}} by {{$post->user->name}} on <a href='/b/{{$post->board}}'>{{$post->board}}</a></small>
+                    <small>Submitted {{$post->created_at}} by {{$post->user->name}} on <strong><a href='/b/{{$post->board}}'>{{$post->board}}</a></strong></small>
                 </div>
                 
             </div>

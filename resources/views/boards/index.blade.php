@@ -13,73 +13,139 @@
                 @foreach($posts as $post)
                     <div class='well well-sm'>
                         <div class='pull-left rating'>
-                <strong>{{$post->totalRating()}}</strong>
-            </div>
-            @if(!Auth::guest())
-                <div class='pull-left rating-buttons'>
+                        <strong>{{$post->totalRating()}}</strong>
+                    </div>
+                    @if(!Auth::guest())
+                        <div class='pull-left rating-buttons'>
 
-                @if($post->userHasRated(Auth::user()->id) == 1)
+                            @if($post->userHasRated(Auth::user()->id) == 1)
 
-                    {!! Form::open(['action' => ['UserPostRatingsController@destroy', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
-                        {!! Form::hidden('_method', 'DELETE') !!}
-                        <button type="submit" class="btn btn-primary btn-sm" style='margin-bottom: 3px'>
-                            <span class="glyphicon glyphicon-chevron-up"></span>
-                        </button>
-                    {!! Form::close() !!}
-                    <br>
-                    {!! Form::open(['action' => ['UserPostRatingsController@update', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
-                        {!! Form::hidden('rating', -1) !!}
-                        {!! Form::hidden('_method', 'PUT') !!}
-                        <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </button>
-                    {!! Form::close() !!}
+                                {!! Form::open(['action' => ['UserPostRatingsController@destroy', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                                    {!! Form::hidden('_method', 'DELETE') !!}
+                                    <button type="submit" class="btn btn-primary btn-sm" style='margin-bottom: 3px'>
+                                        <span class="glyphicon glyphicon-chevron-up"></span>
+                                    </button>
+                                {!! Form::close() !!}
+                                <br>
+                                {!! Form::open(['action' => ['UserPostRatingsController@update', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                                    {!! Form::hidden('rating', -1) !!}
+                                    {!! Form::hidden('_method', 'PUT') !!}
+                                    <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
+                                        <span class="glyphicon glyphicon-chevron-down"></span>
+                                    </button>
+                                {!! Form::close() !!}
 
-                @elseif($post->userHasRated(Auth::user()->id) == -1)
+                            @elseif($post->userHasRated(Auth::user()->id) == -1)
 
-                    {!! Form::open(['action' => ['UserPostRatingsController@update', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
-                        {!! Form::hidden('rating', 1) !!}
-                        {!! Form::hidden('_method', 'PUT') !!}
-                        <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
-                            <span class="glyphicon glyphicon-chevron-up"></span>
-                        </button>
-                    {!! Form::close() !!}
-                    <br>
-                    {!! Form::open(['action' => ['UserPostRatingsController@destroy', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
-                        {!! Form::hidden('_method', 'DELETE') !!}
-                        <button type="submit" class="btn btn-danger btn-sm" style='margin-bottom: 3px'>
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </button>
-                    {!! Form::close() !!}
+                                {!! Form::open(['action' => ['UserPostRatingsController@update', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                                    {!! Form::hidden('rating', 1) !!}
+                                    {!! Form::hidden('_method', 'PUT') !!}
+                                    <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
+                                        <span class="glyphicon glyphicon-chevron-up"></span>
+                                    </button>
+                                {!! Form::close() !!}
+                                <br>
+                                {!! Form::open(['action' => ['UserPostRatingsController@destroy', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                                    {!! Form::hidden('_method', 'DELETE') !!}
+                                    <button type="submit" class="btn btn-danger btn-sm" style='margin-bottom: 3px'>
+                                        <span class="glyphicon glyphicon-chevron-down"></span>
+                                    </button>
+                                {!! Form::close() !!}
 
-                @else 
+                            @else 
 
-                    {!! Form::open(['action' => ['UserPostRatingsController@rate', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
-                        {!! Form::hidden('rating', 1) !!}
-                        <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
-                            <span class="glyphicon glyphicon-chevron-up"></span>
-                        </button>
-                    {!! Form::close() !!}
-                    <br>
-                    {!! Form::open(['action' => ['UserPostRatingsController@rate', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
-                        {!! Form::hidden('rating', -1) !!}
-                        <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </button>
-                    {!! Form::close() !!}
+                                {!! Form::open(['action' => ['UserPostRatingsController@rate', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                                    {!! Form::hidden('rating', 1) !!}
+                                    <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
+                                        <span class="glyphicon glyphicon-chevron-up"></span>
+                                    </button>
+                                {!! Form::close() !!}
+                                <br>
+                                {!! Form::open(['action' => ['UserPostRatingsController@rate', $post->id], 'method' => 'POST', 'style' => 'display: inline;']) !!}
+                                    {!! Form::hidden('rating', -1) !!}
+                                    <button type="submit" class="btn btn-default btn-sm" style='margin-bottom: 3px'>
+                                        <span class="glyphicon glyphicon-chevron-down"></span>
+                                    </button>
+                                {!! Form::close() !!}
 
-                @endif                   
+                            @endif                   
                 
-                </div>
-            @endif
+                        </div>
+                    @endif
                         <div>
                             <h4><a href='/b/{{$board->name}}/posts/{{$post->id}}'>{{$post->title}}</a></h4>
-                            <small>Submitted {{$post->created_at}} by {{$post->user->name}}</small>
+                            <?php 
+                                $date = new DateTime($post->created_at);
+                                $now = new DateTime();
+                                $ago = $date->diff($now)->format("%y %m %d %h %i");
+                                $pieces = explode(" ", $ago);
+
+
+                                if((int)$pieces[0] > 0) {
+                                    $piece = $pieces[0];
+                                    $output = $piece;
+                                    if($piece > 1)  {
+                                        $output = $output." years ago";
+                                    }
+                                    else {
+                                        $output = $output." year ago";
+                                    }
+                                }
+
+                                else if((int)$pieces[1] > 0) {
+                                    $piece = $pieces[1];
+                                    $output = $piece;
+                                    if($piece > 1)  {
+                                        $output = $output." months ago";
+                                    }
+                                    else {
+                                        $output = $output." month ago";
+                                    }
+                                }
+
+                                else if((int)$pieces[2] > 0) {
+                                    $piece = $pieces[2];
+                                    $output = $piece;
+                                    if($piece > 1)  {
+                                        $output = $output." days ago";
+                                    }
+                                    else {
+                                        $output = $output." day ago";
+                                    }
+                                }
+
+                                else if((int)$pieces[3] > 0) {
+                                    $piece = $pieces[3];
+                                    $output = $piece;
+                                    if($piece > 1)  {
+                                        $output = $output." hours ago";
+                                    }
+                                    else {
+                                        $output = $output." hour ago";
+                                    }
+                                }
+
+                                else if((int)$pieces[4] > 0) {
+                                    $piece = $pieces[4];
+                                    $output = $piece;
+                                    if($piece > 1)  {
+                                        $output = $output." minutes ago";
+                                    }
+                                    else {
+                                        $output = $output." minute ago";
+                                    }
+                                }
+
+                                else {
+                                    $output = "less than a minute ago";
+                                }
+                            ?>
+                            <small>Submitted {{$output}} by {{$post->user->name}}</small>
                         </div>
                         
                     </div>
                 @endforeach 
-                {{$posts->links()}}  
+                {{$links->links()}}  
             </div>
             @include('inc.sidebar')
         </div>

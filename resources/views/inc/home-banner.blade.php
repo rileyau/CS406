@@ -1,4 +1,4 @@
-<div class='jumbotron' style='background-image: url("/storage/cover_images/banner.jpg"); background-size: cover; margin: 0px;'>
+<div class='jumbotron' style='background: linear-gradient(141deg, #222 0%, #555 51%, #777 95%); background-size: cover; margin: 0px;'>
     <div class='container board-banner'>
         <h1><a href='/' class='banner-text'>MyReddit</a></h1>
     </div>
