@@ -155,8 +155,25 @@
                 <div class="panel-body">
                     <h2>Comments</h2>
                     <hr>
+                    @if(!Auth::guest())
+                     {!! Form::open(['action' => ['CommentsController@store', $post->board, $post->id], 'method' => 'POST']) !!}
+                        <div class="form-group">
+                            {{Form::label('body', 'Body')}}
+                            {{Form::textarea('body', '', ['id' => 'article-ckeditor', 'class' => 'form-control', 'placeholder' => 'Post your reply'])}}
+                        </div>
+                        {{Form::hidden('board', $board->name)}}
+                        {{Form::submit('Reply', ['class' => 'btn btn-primary'])}}
+                    {!! Form::close() !!}
+                    @endif
                 </div>
             </div>
+                @foreach($comments as $comment)
+                    <div class='well well-sm comment'>
+                        {{$comment->user->name}} <small>{{$comment->created_at}}</small>
+                        <hr>
+                        {!!$comment->body!!}
+                    </div>
+                @endforeach
         </div>
         @include('inc.sidebar')
     </div>

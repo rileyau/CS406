@@ -35,6 +35,9 @@ Route::get('/b/{name}/posts/{id}/edit', 'PostsController@edit');
 Route::put('/b/{name}/posts/{id}', 'PostsController@update');
 Route::delete('/b/{name}/posts/{id}', 'PostsController@destroy');
 
+//Comments
+Route::post('/b/{name}/posts/{post}/comments', 'CommentsController@store');
+
 //Subscriptions
 Route::post('/b/{name}/subscription', 'SubscriptionsController@store');
 Route::delete('/b/{name}/subscription', 'SubscriptionsController@destroy');

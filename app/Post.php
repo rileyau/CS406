@@ -17,6 +17,10 @@ class Post extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function comments() {
+        return $this->hasMany('App\Comment');
+    }
+
     public function userHasRated($user) {
         $userRating = UserPostRating::where('user_id', '=', $user)->where('post_id', '=', $this->id)->first();
 

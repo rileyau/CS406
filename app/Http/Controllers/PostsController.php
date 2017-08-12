@@ -60,6 +60,7 @@ class PostsController extends Controller
     {
         $board = Board::find($name);
         $post = Post::find($id);
+        $comments = $post->comments;
 
         $subbed = false;
 
@@ -71,6 +72,7 @@ class PostsController extends Controller
             'title' => $post->title,
             'post' => $post,
             'board' => $board,
+            'comments' => $comments,
             'subbed' =>$subbed
         );
 
