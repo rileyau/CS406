@@ -27,4 +27,27 @@ class CommentsController extends Controller
 
         return redirect('/b/'.$board.'/posts/'.$post)->with('success', 'Comment created');
     }
+
+    public function update(Request $request, $board, $post, $id)
+    {
+
+        $this->validate($request, [
+            'body' => 'required'
+        ]);
+
+        //Add updated comment to DB
+        $comment = Comment::find($id);
+        $comment->body = $request->input('body');
+
+        $comment->save();
+
+        return 'Success';
+    }
+
+    public function destroy($board, $post, $id) {
+        $comment = Comment::find($id);
+
+        $comment->delete();
+        return redirect('/b/'.$board.'/posts/'.$post)->with('success', 'Comment removed');
+    }
 }

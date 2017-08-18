@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Post;
 use App\Board;
 
@@ -17,10 +18,49 @@ class PostsController extends Controller
     }
 
     public function index() {
-        $posts = Post::paginate(5);
+        $postsWithRatings = DB::table('posts')
+            ->leftJoin(DB::raw("(SELECT sum(rating) as total, post_id FROM user_post_ratings GROUP BY post_id) as ratings"), 'posts.id', 'ratings.post_id')
+            ->select('posts.*', DB::raw('COALESCE(ratings.total, 0) AS rating'), DB::raw("COALESCE(if(COALESCE(ratings.total, 0) < 0, -1, 1) * LOG10(abs(COALESCE(ratings.total, 0))), 0) +  (UNIX_TIMESTAMP(created_at) / 45000) as score"))
+            ->orderBy('score', 'DESC')
+            ->paginate(10);   
+
+        $posts = array();
+            
+        foreach($postsWithRatings as $item) {
+            $obj = new Post((array)$item);
+            array_push($posts, $obj);
+        }
 
         $data = array (
             'posts'=> $posts,
+            'links' => $postsWithRatings
+        );
+
+        return view('posts.index')->with($data);
+    }
+
+    public function subbed() {
+        $postsWithRatings = DB::table('posts')
+            ->whereIn("board", function($query){
+                $query->select('board')
+                ->from('subscriptions')
+                ->where('user_id', auth()->user()->id);
+            })
+            ->leftJoin(DB::raw("(SELECT sum(rating) as total, post_id FROM user_post_ratings GROUP BY post_id) as ratings"), 'posts.id', 'ratings.post_id')
+            ->select('posts.*', DB::raw('COALESCE(ratings.total, 0) AS rating'), DB::raw("COALESCE(if(COALESCE(ratings.total, 0) < 0, -1, 1) * LOG10(abs(COALESCE(ratings.total, 0))), 0) +  (UNIX_TIMESTAMP(created_at) / 45000) as score"))
+            ->orderBy('score', 'DESC')
+            ->paginate(10);   
+
+        $posts = array();
+            
+        foreach($postsWithRatings as $item) {
+            $obj = new Post((array)$item);
+            array_push($posts, $obj);
+        }
+
+        $data = array (
+            'posts'=> $posts,
+            'links' => $postsWithRatings
         );
 
         return view('posts.index')->with($data);

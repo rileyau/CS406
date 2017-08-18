@@ -7,10 +7,10 @@
 <nav class="navbar navbar-default">
     <div class="container">            
             <ul class="nav navbar-nav" id='center-nav'>
-                <li><a href="/">Hot</a></li>
-                <li><a href='/top'>Top</a></li>
-                <li><a href="/rising">Rising</a></li>
-                <li><a href="/new">New</a></li>
+                @if(!Auth::guest())
+                    <li><a href="/">All</a></li>
+                    <li><a href='/subbed'>My Subscriptions</a></li>
+                @endif
             </ul>
     </div>
 </nav>

@@ -35,4 +35,5 @@ class Post extends Model
     public function totalRating() {
         return UserPostRating::where('post_id', '=', $this->id)->sum('rating');
     }
+
 }

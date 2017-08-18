@@ -46,6 +46,10 @@ class BoardsController extends Controller
             else if($filter == 'hot') {
                 $postsWithRatings = $board->getHotPosts();
             }
+            else if($filter == 'rising') {
+                $postsWithRatings = $board->getRisingPosts();
+            }
+
             $posts = array();
             
             foreach($postsWithRatings as $item) {
@@ -67,6 +71,29 @@ class BoardsController extends Controller
                 'subbed' => $subbed
             );
         }
+
+        return view('boards.index')->with($data);
+    }
+
+    public function search(Request $request, $name) {
+        $board = Board::find($name);
+        $searchQuery = $request->input('searchQuery');
+
+        $posts = $board->getPostsContaining($searchQuery);
+
+        $subbed = false;
+
+        if(!Auth::guest()) {
+            $subbed = $board->userIsSubbed(Auth::user()->id);
+        }
+
+        $data = array (
+            'title' => $name,
+            'board'=> $board,
+            'posts'=> $posts,
+            'links' => $posts,
+            'subbed' => $subbed
+        );
 
         return view('boards.index')->with($data);
     }
@@ -103,7 +130,6 @@ class BoardsController extends Controller
         else {
             $filenameToStore = NULL;
         }
-        
 
         //Add post to DB
         $name = $request->input('name');
@@ -131,7 +157,6 @@ class BoardsController extends Controller
     public function update(Request $request, $name)
     {
         $this->validate($request, [
-            'name' => 'required',
             'description' => 'nullable',
             'cover_image' => 'image|nullable|max:1999'
         ]);

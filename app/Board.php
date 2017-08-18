@@ -22,7 +22,7 @@ class Board extends Model
             ->leftJoin(DB::raw("(SELECT sum(rating) as total, post_id FROM user_post_ratings GROUP BY post_id) as ratings"), 'posts.id', 'ratings.post_id')
             ->select('posts.*', DB::raw('COALESCE(ratings.total, 0) AS rating'))
             ->orderBy('rating', 'DESC')
-            ->paginate(5);   
+            ->paginate(10);   
 
         return ($result);
     }
@@ -33,13 +33,30 @@ class Board extends Model
             ->leftJoin(DB::raw("(SELECT sum(rating) as total, post_id FROM user_post_ratings GROUP BY post_id) as ratings"), 'posts.id', 'ratings.post_id')
             ->select('posts.*', DB::raw('COALESCE(ratings.total, 0) AS rating'), DB::raw("COALESCE(if(COALESCE(ratings.total, 0) < 0, -1, 1) * LOG10(abs(COALESCE(ratings.total, 0))), 0) +  (UNIX_TIMESTAMP(created_at) / 45000) as score"))
             ->orderBy('score', 'DESC')
-            ->paginate(5);   
+            ->paginate(10);   
+
+        return ($result);
+    }
+
+    public function getRisingPosts() {
+        $result = DB::table('posts')
+            ->where('board', '=', $this->name)
+            ->whereDate('created_at', '>=', DB::raw('SUBDATE(NOW(),1)'))
+            ->leftJoin(DB::raw("(SELECT sum(rating) as total, post_id FROM user_post_ratings GROUP BY post_id) as ratings"), 'posts.id', 'ratings.post_id')
+            ->select('posts.*', DB::raw('COALESCE(ratings.total, 0) AS rating'), DB::raw("COALESCE(if(COALESCE(ratings.total, 0) < 0, -1, 1) * LOG10(abs(COALESCE(ratings.total, 0))), 0) +  (UNIX_TIMESTAMP(created_at) / 45000) as score"))
+            ->orderBy('score', 'DESC')
+            ->paginate(10);   
 
         return ($result);
     }
 
     public function getNewPosts() {
-        $result = Post::where('board', '=', $this->name)->orderBy('created_at', 'DESC')->paginate(5);
+        $result = Post::where('board', '=', $this->name)->orderBy('created_at', 'DESC')->paginate(10);
+        return $result;
+    }
+
+    public function getPostsContaining($searchString) {
+        $result = Post::where('title', 'LIKE', '%'.$searchString.'%')->orderBy('created_at', 'DESC')->paginate(10);
         return $result;
     }
 }

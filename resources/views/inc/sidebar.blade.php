@@ -13,25 +13,30 @@
                 {!! Form::close() !!}
             @endif
             <hr>
+            {!! Form::open(['action' => ['BoardsController@search', $board->name], 'method' => 'GET', 'style' => 'display: inline']) !!}
                 <div class="input-group">
-                    <input type="text" class="form-control" name="x" placeholder="Search term...">
+                    
+                    <input type="text" class="form-control" name="searchQuery" placeholder="Search term...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
                 </div>
+                {!! Form::close() !!}
                 <br>
-                <div class='form-group'>
+                <!--<div class='form-group'>
                     <label class="form-check-label">
                     &nbsp<input type="checkbox" class="form-check-input">
                     &nbsp Limit search to this board
                     </label>
-                </div>                        
+                </div>-->                    
             <hr>
+                <div class='panel-description'>
                 {!! $board->description !!}
+                </div>
             @if(!Auth::guest())
                 @if(Auth::user()->id == $board->created_by)
                     <hr>
-                    <a href='/b/{{$board->name}}/edit' class='btn btn-default'>Edit Board</a> <a href='#' class='btn btn-danger'>Lock Board</a>
+                    <a href='/b/{{$board->name}}/edit' class='btn btn-default'>Edit Board</a>
                 @endif
             @endif
         </div>

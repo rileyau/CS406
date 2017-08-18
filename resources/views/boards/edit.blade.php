@@ -6,11 +6,6 @@
     <h1>Edit Board</h1>
     <br>
     {!! Form::open(['action' => ['BoardsController@update', $board->name], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-        <div class="form-group">
-            {{Form::label('name', 'Name')}}
-            {{Form::text('name', $board->name, ['class' => 'form-control', 'placeholder' => 'Name'])}}
-            <small>Board names must be unique and contain 50 or less alpha-numeric charcters</small>
-        </div>
 
         <div class="form-group">
             {{Form::label('description', 'Description')}}
