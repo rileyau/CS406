@@ -17,10 +17,6 @@ class SubscriptionsController extends Controller
         $user_id = auth()->user()->id;
         $board = $name;
 
-        if($board->userIsSubbed($user_id)) {
-            return redirect('/b/'.$name);
-        }
-
         $sub = new Subscription;
         $sub->user_id = $user_id;
         $sub->board = $board;
