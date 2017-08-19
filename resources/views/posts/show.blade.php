@@ -157,7 +157,7 @@
                 <div class="panel-body">
                     <h2>Comment</h2>
                     <hr>
-                    
+                    @include('inc.errors')
                      {!! Form::open(['action' => ['CommentsController@store', $post->board, $post->id], 'method' => 'POST']) !!}
                         <div class="form-group">
                             {{Form::label('body', 'Body')}}

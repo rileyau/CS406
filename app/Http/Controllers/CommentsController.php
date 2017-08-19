@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Comment;
+use Validator;
 
 class CommentsController extends Controller
 {
@@ -13,9 +14,15 @@ class CommentsController extends Controller
     }
 
     public function store(Request $request, $board, $post) {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'body' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
     
         //Add comment to DB
         $comment = new Comment;

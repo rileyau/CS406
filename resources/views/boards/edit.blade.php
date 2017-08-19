@@ -5,6 +5,7 @@
     <br>
     <h1>Edit Board</h1>
     <br>
+    @include('inc.errors')
     {!! Form::open(['action' => ['BoardsController@update', $board->name], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
         <div class="form-group">

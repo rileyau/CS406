@@ -5,6 +5,7 @@
     <br>
     <h1>Create a New Board</h1>
     <br>
+    @include('inc.errors')
     {!! Form::open(['action' => 'BoardsController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <div class="form-group">
             {{Form::label('name', 'Name')}}

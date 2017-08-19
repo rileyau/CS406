@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Board;
 use App\Post;
 use App\User;
+use Validator;
 
 
 class BoardsController extends Controller
@@ -110,6 +111,18 @@ class BoardsController extends Controller
             'cover_image' => 'image|nullable|max:1999'
         ]);
 
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:boards,name|max:50',
+            'description' => 'nullable',
+            'cover_image' => 'image|nullable|max:1999'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
         // Handle File Upload
         if($request->hasFile('cover_image')){
             //Get filename with the extension
@@ -156,10 +169,16 @@ class BoardsController extends Controller
 
     public function update(Request $request, $name)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'description' => 'nullable',
             'cover_image' => 'image|nullable|max:1999'
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
 
         // Handle File Upload
         if($request->hasFile('cover_image')){

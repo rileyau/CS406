@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Post;
 use App\Board;
+use Validator;
 
 class PostsController extends Controller
 {
@@ -79,10 +80,17 @@ class PostsController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
+
+        $validator = Validator::make($request->all(), [
             'title' => 'required',
             'body' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
        
         $board = $request->input('board');
         //Add post to DB
@@ -148,10 +156,16 @@ class PostsController extends Controller
     public function update(Request $request, $name, $id)
     {
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'title' => 'required',
             'body' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
 
         //Add updated post to DB
         $post = Post::find($id);

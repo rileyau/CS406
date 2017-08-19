@@ -5,6 +5,7 @@
 <div class='container'>
 
 <h1>Edit Post</h1>
+@include('inc.errors')
 {!! Form::open(['action' => ['PostsController@update', $board->name, $post->id], 'method' => 'POST']) !!}
     <div class="form-group">
         {{Form::label('title', 'Title')}}
