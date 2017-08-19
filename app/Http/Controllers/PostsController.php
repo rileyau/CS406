@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Post;
 use App\Board;
+use App\Comment;
 use Validator;
 
 class PostsController extends Controller
@@ -108,7 +109,15 @@ class PostsController extends Controller
     {
         $board = Board::find($name);
         $post = Post::find($id);
-        $comments = $post->comments;
+        $commentsWithRatings = $post->getTopComments();
+
+        //Cast objects back to comments
+        $comments = array();
+            
+        foreach($commentsWithRatings as $item) {
+            $obj = new Comment((array)$item);
+            array_push($comments, $obj);
+        }
 
         $subbed = false;
 
@@ -116,11 +125,13 @@ class PostsController extends Controller
             $subbed = $board->userIsSubbed(Auth::user()->id);
         }
 
+
          $data = array(
             'title' => $post->title,
             'post' => $post,
             'board' => $board,
             'comments' => $comments,
+            'links' => $commentsWithRatings,
             'subbed' =>$subbed
         );
 

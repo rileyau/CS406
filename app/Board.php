@@ -58,5 +58,7 @@ class Board extends Model
     public function getPostsContaining($searchString) {
         $result = Post::where('title', 'LIKE', '%'.$searchString.'%')->orderBy('created_at', 'DESC')->paginate(10);
         return $result;
+
+        
     }
 }

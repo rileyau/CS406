@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\UserPostRating;
+use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
@@ -35,5 +36,17 @@ class Post extends Model
     public function totalRating() {
         return UserPostRating::where('post_id', '=', $this->id)->sum('rating');
     }
+
+    public function getTopComments() {
+        $result = DB::table('comments')
+            ->where('post_id', '=', $this->id)
+            ->leftJoin(DB::raw("(SELECT sum(rating) as total, comment_id FROM user_comment_ratings GROUP BY comment_id) as ratings"), 'comments.id', 'ratings.comment_id')
+            ->select('comments.*', DB::raw('COALESCE(ratings.total, 0) AS rating'))
+            ->orderBy('rating', 'DESC')
+            ->paginate(5);   
+
+        return ($result);
+    }
+    
 
 }

@@ -51,6 +51,13 @@ Route::post('/posts/{post}/rating', 'UserPostRatingsController@rate');
 Route::put('/posts/{post}/rating', 'UserPostRatingsController@update');
 Route::delete('/posts/{post}/rating', 'UserPostRatingsController@destroy');
 
+//UserCommentRatings
+Route::post('/comments/{comment_id}/rating', 'UserCommentRatingsController@rate');
+Route::put('/comments/{comment_id}/rating', 'UserCommentRatingsController@update');
+Route::delete('/comments/{comment_id}/rating', 'UserCommentRatingsController@destroy');
+
+Route::get('/dashboard', 'DashboardController@index');
+
 //Auth
 Auth::routes();
 
